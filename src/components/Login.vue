@@ -51,13 +51,23 @@
 </template>
 <script>
 import HeaderTop from "./Header";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     HeaderTop,
   },
+  mounted() {
+    if (this.usersStore) {
+      this.user = this.usersStore;
+    }
+  },
+  computed: {
+    ...mapGetters(["usersStore"]),
+  },
   data() {
     return {
+      user: [],
       form: {
         name: "",
         email: "",
@@ -65,22 +75,28 @@ export default {
         gender: "male",
         password: "",
       },
+      user_password: "",
     };
   },
   methods: {
     login() {
-      var response = "Success";
-      if (response == "Success") {
-        this.$message({
-          message: "Login Success",
-          type: "success",
-        });
-        this.$router.push("dashboard");
-      } else {
-        this.$message({
-          message: "Sorry invalid credentials",
-          type: "error",
-        });
+      var app = this;
+      for (var i = 0; i < app.user.length; i++) {
+        if (app.user[i]["email"] == app.form.email) {
+          app.user_password = app.user[i]["password"];
+          if (this.user_password == app.form.password) {
+            this.$message({
+              message: "Login Success",
+              type: "success",
+            });
+            this.$router.push("dashboard");
+          } else {
+            this.$message({
+              message: "Sorry invalid credentials",
+              type: "error",
+            });
+          }
+        }
       }
     },
   },

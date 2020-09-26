@@ -85,14 +85,16 @@
 </template>
 <script>
 import HeaderTop from "./Header";
+import { mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     HeaderTop,
   },
   mounted() {
-    if (localStorage.users && localStorage.users != "") {
-      this.user = Object.assign({}, localStorage.users);
+    if (this.usersStore) {
+      this.user = this.usersStore;
     }
   },
   data() {
@@ -113,7 +115,7 @@ export default {
       app.form.created = new Date();
       var obj = Object.assign({}, app.form);
       app.user.push(obj);
-      localStorage.users = this.user;
+      app.usersUpdate(app.user);
       this.form.name = "";
       this.form.email = "";
       this.form.dob = "";
@@ -126,6 +128,10 @@ export default {
         type: "success",
       });
     },
+    ...mapMutations(["usersUpdate"]),
+  },
+  computed: {
+    ...mapGetters(["usersStore"]),
   },
 };
 </script>
@@ -150,5 +156,8 @@ export default {
 .el-date-editor.el-input,
 .el-date-editor.el-input__inner {
   width: 340px;
+}
+.error {
+  color: red;
 }
 </style>
