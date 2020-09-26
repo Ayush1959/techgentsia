@@ -52,6 +52,7 @@
 <script>
 import HeaderTop from "./Header";
 import { mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 
 export default {
   components: {
@@ -79,12 +80,14 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setwelcomeUser"]),
     login() {
       var app = this;
       for (var i = 0; i < app.user.length; i++) {
         if (app.user[i]["email"] == app.form.email) {
           app.user_password = app.user[i]["password"];
           if (this.user_password == app.form.password) {
+            app.setwelcomeUser(app.user[i]);
             this.$message({
               message: "Login Success",
               type: "success",
